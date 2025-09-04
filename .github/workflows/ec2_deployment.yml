@@ -2,14 +2,13 @@ name: EC2 Deployment
 
 on:
   workflow_dispatch:
-
-inputs:
-  ssh_host:
-    description: 'The SSH host to deploy to'
-    required: true
-  ssh_user:
-    description: 'The SSH user to deploy to'
-    required: true
+    inputs:
+      ssh_host:
+        description: 'The SSH host to deploy to'
+        required: true
+      ssh_user:
+        description: 'The SSH user to deploy to'
+        required: true
 
 jobs:
   deploy:
