@@ -42,6 +42,13 @@ jobs:
             
             # Instalar dependencias
             npm install
-            
+
+            # Instalar PM2 globalmente si no está instalado
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+
             # Reiniciar la aplicación con PM2
             pm2 restart ecosystem.config.js || pm2 start ecosystem.config.js
+            pm2 save
+            pm2 startup
