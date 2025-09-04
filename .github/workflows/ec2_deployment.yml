@@ -37,7 +37,6 @@ jobs:
             # Clone or update the repository
             if [ -d "simple-api" ]; then
               sudo rm -rf simple-api
-            else
             fi
             
             echo "Cloning new repository"
