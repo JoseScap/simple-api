@@ -26,3 +26,15 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "Deploying to EC2"
+            # Crear directorio si no existe
+            sudo mkdir -p /var/www
+            cd /var/www
+            
+            # Clonar o actualizar el repositorio
+            if [ -d "simple-api" ]; then
+              cd simple-api
+              git pull origin main
+            else
+              git clone https://github.com/${{ github.repository }}.git simple-api
+              cd simple-api
+            fi
