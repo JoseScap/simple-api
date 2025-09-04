@@ -39,6 +39,17 @@ jobs:
               git clone https://github.com/${{ github.repository }}.git simple-api
               cd simple-api
             fi
+
+            # Generar .env file
+            cp env.example .env
+
+            # Editar .env file con las variables de entorno
+            sed -i "s/DB_HOST=.*/DB_HOST=${{ secrets.DB_HOST }}/" .env
+            sed -i "s/DB_PORT=.*/DB_PORT=${{ secrets.DB_PORT }}/" .env
+            sed -i "s/DB_NAME=.*/DB_NAME=${{ secrets.DB_NAME }}/" .env
+            sed -i "s/DB_USER=.*/DB_USER=${{ secrets.DB_USER }}/" .env
+            sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
+            sed -i "s/PORT=.*/PORT=${{ secrets.PORT }}/" .env
             
             # Instalar dependencias
             npm install
