@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpecs = require('./config/swagger');
+const createSwaggerSpecs = require('./config/swagger');
 const apiRoutes = require('./controllers/api.controller');
 const dataRoutes = require('./controllers/data.controller');
 const { initializeDatabase } = require('./database');
@@ -24,12 +24,15 @@ initializeDatabase().catch(error => {
     process.exit(1);
 });
 
-// Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
-    explorer: true,
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: "Simple API Documentation"
-}));
+// Swagger UI with dynamic server configuration
+app.use('/api-docs', swaggerUi.serve, (req, res, next) => {
+    const swaggerSpecs = createSwaggerSpecs(req);
+    swaggerUi.setup(swaggerSpecs, {
+        explorer: true,
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: "Simple API Documentation"
+    })(req, res, next);
+});
 
 // API Routes
 app.use('/api', apiRoutes);

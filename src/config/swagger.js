@@ -1,23 +1,29 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Simple API',
-            version: '1.0.0',
-            description: 'A simple API designed for infrastructure testing purposes',
-            contact: {
-                name: 'API Support',
-                email: 'support@example.com'
-            }
-        },
-        servers: [
-            {
-                url: 'http://localhost:3000',
-                description: 'Development server'
-            }
-        ],
+// Function to create Swagger specs with dynamic server configuration
+const createSwaggerSpecs = (req) => {
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+
+    const options = {
+        definition: {
+            openapi: '3.0.0',
+            info: {
+                title: 'Simple API',
+                version: '1.0.0',
+                description: 'A simple API designed for infrastructure testing purposes',
+                contact: {
+                    name: 'API Support',
+                    email: 'support@example.com'
+                }
+            },
+            servers: [
+                {
+                    url: baseUrl,
+                    description: 'Current server'
+                }
+            ],
         components: {
             schemas: {
                 ApiInfo: {
@@ -78,11 +84,12 @@ const options = {
                     }
                 }
             }
-        }
-    },
-    apis: ['./src/controllers/*.js'], // files containing Swagger annotations
+            }
+        },
+        apis: ['./src/controllers/*.js'], // files containing Swagger annotations
+    };
+
+    return swaggerJsdoc(options);
 };
 
-const specs = swaggerJsdoc(options);
-
-module.exports = specs;
+module.exports = createSwaggerSpecs;
