@@ -20,14 +20,14 @@ A simple API designed for infrastructure testing purposes with integrated Swagge
 
 ```bash
 # Install dependencies
-yarn install
+npm install
 
 # Configure environment variables
 cp env.example .env
 # Edit .env file with your MySQL database credentials
 
 # Start the server
-yarn start
+npm start
 ```
 
 ## Usage
@@ -35,7 +35,7 @@ yarn start
 ### Start the server
 
 ```bash
-yarn start
+npm start
 ```
 
 The server will run on `http://localhost:3000`
@@ -126,8 +126,8 @@ simple-api/
 For development with automatic reload, you can use:
 
 ```bash
-yarn add -D nodemon
-yarn dev
+npm install -D nodemon
+npm run dev
 ```
 
 ## Technologies Used
@@ -141,5 +141,5 @@ yarn dev
 - **Winston** - File-based logging system
 - **Swagger UI Express** - User interface for API documentation
 - **Swagger JSDoc** - Documentation generation from JSDoc comments
-- **Yarn** - Package manager
+- **npm** - Package manager
 
