@@ -53,7 +53,7 @@ jobs:
             echo "Configuring environment variables"
             # Edit .env file with environment variables
             sed -i "s/DB_HOST=.*/DB_HOST=${{ vars.DB_HOST }}/" .env
-            sed -i "s/DB_PORT=.*/DB_PORT=${{ var.DB_PORT }}/" .env
+            sed -i "s/DB_PORT=.*/DB_PORT=${{ vars.DB_PORT }}/" .env
             sed -i "s/DB_NAME=.*/DB_NAME=${{ vars.DB_NAME }}/" .env
             sed -i "s/DB_USER=.*/DB_USER=${{ secrets.DB_USER }}/" .env
             sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
