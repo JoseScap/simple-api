@@ -36,14 +36,13 @@ jobs:
             echo "Cloning or updating repository"
             # Clone or update the repository
             if [ -d "simple-api" ]; then
-              cd simple-api
-              echo "Updating existing repository"
-              git pull origin main
+              rm -rf simple-api
             else
-              echo "Cloning new repository"
-              git clone https://github.com/${{ github.repository }}.git simple-api
-              cd simple-api
             fi
+            
+            echo "Cloning new repository"
+            git clone https://github.com/${{ github.repository }}.git simple-api
+            cd simple-api
 
             echo "Generating .env file from template"
             # Generate .env file
