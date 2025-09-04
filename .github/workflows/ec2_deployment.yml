@@ -44,12 +44,12 @@ jobs:
             echo "Creating .env file from scratch"
             sudo rm -f .env
             cat > .env << 'EOF'
-            DB_HOST=${{ vars.DB_HOST }}
-            DB_PORT=${{ vars.DB_PORT }}
-            DB_NAME=${{ vars.DB_NAME }}
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            SERVER_PORT=${{ vars.SERVER_PORT }}
+            DB_HOST="${{ vars.DB_HOST }}"
+            DB_PORT="${{ vars.DB_PORT }}"
+            DB_NAME="${{ vars.DB_NAME }}"
+            DB_USER="${{ secrets.DB_USER }}"
+            DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+            SERVER_PORT="${{ vars.SERVER_PORT }}"
             EOF
             echo "Environment variables configured successfully"
             
