@@ -41,6 +41,7 @@ jobs:
             fi
 
             # Generar .env file
+            rm -f .env
             cp env.example .env
 
             # Editar .env file con las variables de entorno
