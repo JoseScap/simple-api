@@ -22,7 +22,7 @@ jobs:
         with:
           host: ${{ inputs.ssh_host }}
           username: ${{ inputs.ssh_user }}
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "Deploying to EC2"
             # Crear directorio si no existe
