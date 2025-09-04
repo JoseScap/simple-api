@@ -60,6 +60,7 @@ jobs:
             fi
 
             # Reiniciar la aplicación con PM2
-            pm2 restart ecosystem.config.js || pm2 start ecosystem.config.js
+            pm2 delete 0 || true
+            pm2 start ecosystem.config.js
             pm2 save
             pm2 startup
