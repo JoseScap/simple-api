@@ -9,7 +9,7 @@ const logger = require('./utils/logger');
 
 const app = express();
 
-app.set('port', 3000 || process.env.PORT);
+app.set('port', 3000 || process.env.SERVER_PORT);
 app.set('json spaces', 2);
 
 // HTTP request logging

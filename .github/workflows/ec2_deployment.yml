@@ -57,7 +57,7 @@ jobs:
             sed -i "s/DB_NAME=.*/DB_NAME=${{ vars.DB_NAME }}/" .env
             sed -i "s/DB_USER=.*/DB_USER=${{ secrets.DB_USER }}/" .env
             sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
-            sed -i "s/PORT=.*/PORT=${{ vars.PORT }}/" .env
+            sed -i "s/SERVER_PORT=.*/SERVER_PORT=${{ vars.SERVER_PORT }}/" .env
             
             echo "Installing dependencies"
             # Install dependencies
