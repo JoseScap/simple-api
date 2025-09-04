@@ -25,26 +25,33 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "Deploying to EC2"
-            # Crear directorio si no existe y cambiar permisos
+            echo "Creating deployment directory and setting permissions"
+            # Create directory if it doesn't exist and change permissions
             sudo mkdir -p /var/www
             sudo chown -R $USER:$USER /var/www
             
+            echo "Navigating to deployment directory"
             cd /var/www
             
-            # Clonar o actualizar el repositorio
+            echo "Cloning or updating repository"
+            # Clone or update the repository
             if [ -d "simple-api" ]; then
               cd simple-api
+              echo "Updating existing repository"
               git pull origin main
             else
+              echo "Cloning new repository"
               git clone https://github.com/${{ github.repository }}.git simple-api
               cd simple-api
             fi
 
-            # Generar .env file
-            rm -f .env
+            echo "Generating .env file from template"
+            # Generate .env file
+            sudo rm -f .env
             cp env.example .env
 
-            # Editar .env file con las variables de entorno
+            echo "Configuring environment variables"
+            # Edit .env file with environment variables
             sed -i "s/DB_HOST=.*/DB_HOST=${{ secrets.DB_HOST }}/" .env
             sed -i "s/DB_PORT=.*/DB_PORT=${{ secrets.DB_PORT }}/" .env
             sed -i "s/DB_NAME=.*/DB_NAME=${{ secrets.DB_NAME }}/" .env
@@ -52,14 +59,19 @@ jobs:
             sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
             sed -i "s/PORT=.*/PORT=${{ secrets.PORT }}/" .env
             
-            # Instalar dependencias
+            echo "Installing dependencies"
+            # Install dependencies
+            sudo rm -rf node_modules
             npm install
 
-            # Instalar PM2 globalmente si no está instalado
+            echo "Installing PM2 globally if not already installed"
+            # Install PM2 globally if not installed
             if ! command -v pm2 &> /dev/null; then
               sudo npm install -g pm2
             fi
 
-            # Reiniciar la aplicación con PM2
+            echo "Restarting application with PM2"
+            # Restart application with PM2
             pm2 delete 0 || true
             pm2 start ecosystem.config.js
+            echo "Deployment completed successfully"
