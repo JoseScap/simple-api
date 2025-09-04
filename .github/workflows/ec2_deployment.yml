@@ -26,7 +26,6 @@ jobs:
           script: |
             echo "Deploying to EC2"
             echo "Creating deployment directory and setting permissions"
-            # Create directory if it doesn't exist and change permissions
             sudo mkdir -p /var/www
             sudo chown -R $USER:$USER /var/www
             
@@ -34,7 +33,6 @@ jobs:
             cd /var/www
             
             echo "Cloning or updating repository"
-            # Clone or update the repository
             if [ -d "simple-api" ]; then
               sudo rm -rf simple-api
             fi
@@ -43,33 +41,31 @@ jobs:
             git clone https://github.com/${{ github.repository }}.git simple-api
             cd simple-api
 
-            echo "Generating .env file from template"
-            # Generate .env file
+            echo "Creating .env file from scratch"
             sudo rm -f .env
-            cp env.example .env
-
-            echo "Configuring environment variables"
-            # Edit .env file with environment variables
-            sed -i "s/DB_HOST=.*/DB_HOST=${{ vars.DB_HOST }}/" .env
-            sed -i "s/DB_PORT=.*/DB_PORT=${{ vars.DB_PORT }}/" .env
-            sed -i "s/DB_NAME=.*/DB_NAME=${{ vars.DB_NAME }}/" .env
-            sed -i "s/DB_USER=.*/DB_USER=${{ secrets.DB_USER }}/" .env
-            sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
-            sed -i "s/SERVER_PORT=.*/SERVER_PORT=${{ vars.SERVER_PORT }}/" .env
+            cat > .env << 'EOF'
+            # Database Configuration
+            DB_HOST=${{ vars.DB_HOST }}
+            DB_PORT=${{ vars.DB_PORT }}
+            DB_NAME=${{ vars.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            
+            # Server Configuration
+            SERVER_PORT=${{ vars.SERVER_PORT }}
+            EOF
+            echo "Environment variables configured successfully"
             
             echo "Installing dependencies"
-            # Install dependencies
             sudo rm -rf node_modules
             npm install
 
             echo "Installing PM2 globally if not already installed"
-            # Install PM2 globally if not installed
             if ! command -v pm2 &> /dev/null; then
               sudo npm install -g pm2
             fi
 
             echo "Restarting application with PM2"
-            # Restart application with PM2
             pm2 delete 0 || true
             pm2 start ecosystem.config.js
             echo "Deployment completed successfully"
