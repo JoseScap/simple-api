@@ -2,14 +2,13 @@ name: EC2 Deployment
 
 on:
   workflow_dispatch:
-
-inputs:
-  ssh_host:
-    description: 'The SSH host to deploy to'
-    required: true
-  ssh_user:
-    description: 'The SSH user to deploy to'
-    required: true
+    inputs:
+      ssh_host:
+        description: 'The SSH host to deploy to'
+        required: true
+      ssh_user:
+        description: 'The SSH user to deploy to'
+        required: true
 
 jobs:
   deploy:
@@ -23,6 +22,47 @@ jobs:
         with:
           host: ${{ inputs.ssh_host }}
           username: ${{ inputs.ssh_user }}
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "Deploying to EC2"
+            echo "Creating deployment directory and setting permissions"
+            sudo mkdir -p /var/www
+            sudo chown -R $USER:$USER /var/www
+            
+            echo "Navigating to deployment directory"
+            cd /var/www
+            
+            echo "Cloning or updating repository"
+            if [ -d "simple-api" ]; then
+              sudo rm -rf simple-api
+            fi
+            
+            echo "Cloning new repository"
+            git clone https://github.com/${{ github.repository }}.git simple-api
+            cd simple-api
+
+            echo "Creating .env file from scratch"
+            sudo rm -f .env
+            cat > .env << 'EOF'
+            DB_HOST="${{ vars.DB_HOST }}"
+            DB_PORT="${{ vars.DB_PORT }}"
+            DB_NAME="${{ vars.DB_NAME }}"
+            DB_USER="${{ secrets.DB_USER }}"
+            DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+            SERVER_PORT="${{ vars.SERVER_PORT }}"
+            EOF
+            echo "Environment variables configured successfully"
+            
+            echo "Installing dependencies"
+            sudo rm -rf node_modules
+            npm install
+
+            echo "Installing PM2 globally if not already installed"
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+
+            echo "Restarting application with PM2"
+            pm2 delete 0 || true
+            pm2 start ecosystem.config.js
+            echo "Deployment completed successfully"
