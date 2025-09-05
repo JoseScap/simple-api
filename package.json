@@ -4,7 +4,8 @@
   "description": "A simple API designed for infrastructure testing purposes",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start ecosystem.config.js",
+    "start": "pm2 start index.js",
+    "stop": "pm2 stop index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
